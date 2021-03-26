@@ -1,0 +1,15 @@
+---
+- hosts: all
+  tasks:
+    - name: Copia de Seguridad Centos
+      shell: tar cfz /root/bkp-ejemplos.tar.gz /home/ansible/*
+      when: inventory_hostname in groups ['bk01']
+      tags: bk1
+    
+    - name: Copia de Seguridad Debian
+      shell: tar cfz /root/bkp-ejemplos01.tar.gz /etc/postgresql/*
+      when: inventory_hostname in groups ['bk02']
+      tags: bk2
+...      
+
+### Para ejecutar el tags hay que dejar descomentado el when ###

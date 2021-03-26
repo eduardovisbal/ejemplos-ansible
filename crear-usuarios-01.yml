@@ -1,0 +1,17 @@
+---
+- hosts: centos
+  tasks:
+    - name: Descargando script Creacion Usuario
+      get_url:
+        url: "{{ item }}"
+        dest: /tmp
+        mode: '0755'
+      loop:
+        - http://192.168.1.106/prueba/user-carlos.sh
+        - http://192.168.1.106/prueba/user-pepito.sh
+
+    - name: Instalando Usuarios
+      shell: user-carlos.sh
+      args:
+        chdir: /tmp
+...

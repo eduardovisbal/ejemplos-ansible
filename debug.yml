@@ -1,0 +1,12 @@
+---
+- hosts: centos
+  tasks:
+    - name: Instalar HTOP
+      yum:
+        name: htop
+        state: latest
+      register: instalado
+
+    - name: Salida Debug
+      debug: 
+        var: instalado

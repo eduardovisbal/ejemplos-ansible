@@ -1,0 +1,26 @@
+---
+- hosts: centos
+  tasks:
+    - name: Instalando APACHE
+      yum: 
+        name: httpd
+        state: latest
+
+    - name: activando FW
+      firewalld:
+         service: http
+         permanent: true
+         immediate: true
+         state: enabled
+
+    - name: Copiando info
+      copy:
+        content: "{{ ansible_hostname }} IP=  {{ ansible_default_ipv4.address }}"
+        dest: /var/www/html/index.html
+
+    - name: activando servicio HTTP
+      service:
+        name: httpd
+        state: started
+        enabled: true
+...

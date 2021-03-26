@@ -1,0 +1,13 @@
+---
+- hosts: centos
+  tasks:
+    - name: Validar archivo
+      stat: 
+        path: /tmp/Cc123456.txt
+      register: ExisteArchivo
+    - debug: var=ExisteArchivo  
+
+    - name: Si el archivo existe
+      shell: echo "123" > /tmp/AAABBB.txt
+      when: ExisteArchivo.stat.exists == false
+...    

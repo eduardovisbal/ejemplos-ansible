@@ -1,0 +1,12 @@
+---
+- hosts: centos
+  tasks:
+    - name: Creando usuarios
+      user:
+        name: "{{ item.nombre }}"
+        state: present
+        groups: "{{ item.grupos }}"
+      with_items:
+        - { nombre: 'wilfrido', grupos: 'wheel'  }
+        - { nombre: 'susana', grupos: 'root'  }
+...

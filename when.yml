@@ -1,0 +1,10 @@
+---
+- hosts: all
+  tasks:
+    - name: Instalando htop
+      yum:
+        name: htop
+        state: latest
+      when: inventory_hostname in groups['centos']
+...      
+      

@@ -1,0 +1,20 @@
+---
+- hosts: centos
+  tasks:
+    - name: Copiando archivo
+      copy:
+        #content: "{{ ansible_hostname }}"
+        src: hostname01.txt
+        dest: /var/www/html/prueba/hostname.txt
+        owner: root
+        group: root
+        mode: 0644
+        backup: yes
+        force: no
+
+    - name: Modificando lineas con lineinfile
+      lineinfile:
+        path: /var/www/html/prueba/hostname.txt
+        regexp: "Hola"
+        line: "Hola este es el servidor {{ ansible_hostname }}"
+...        

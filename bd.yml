@@ -1,0 +1,16 @@
+---
+- hosts: centos 
+  vars_files:
+    - vars1.yml
+  tasks:
+    - name: Instalar MariaDB
+      yum:
+        name: "{{ db_pkg }}"
+        state: absent
+
+    - name: Iniciando servicio de MariaDB
+      service:
+        name: "{{ db_srv }}"
+        state: stopped
+        enabled: false
+...

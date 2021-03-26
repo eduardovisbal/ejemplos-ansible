@@ -1,0 +1,16 @@
+---
+- hosts: centos
+  tasks:
+    - name: Verificando Servicio HTTPD
+      service:
+        name: httpd
+        state: started
+        enabled: true
+      register: httpd
+
+    - name: Debug servicio
+      debug:
+        var: httpd
+      
+...      
+

@@ -1,0 +1,13 @@
+---
+- hosts: centos
+  tasks:
+    - name: Copiar Archivo
+      copy:
+        content: "Archivo de prueba "
+        dest: /tmp/prueba123.txt
+      register: ArchivoCreado
+
+    - name: debug
+      debug:
+        var: ArchivoCreado
+...        

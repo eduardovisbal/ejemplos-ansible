@@ -1,0 +1,21 @@
+---
+- hosts: centos
+  tasks:
+    - block:
+      - name: Crear archivo
+        shell: touch /tm/123456.txt
+     
+      rescue:
+      - name: Crear archivo
+        shell: touch /tmp/A123456.txt
+       
+      always:  
+      - name: Crear archivo
+        shell: touch /tmp/Ba123456.txt
+
+      - name: Crear archivo
+        shell: touch /tmp/Cc123456.txt
+
+
+
+...        

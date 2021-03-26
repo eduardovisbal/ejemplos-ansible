@@ -1,0 +1,17 @@
+---
+- name: Creando Instancia EC2
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Lanzando EC2
+      ec2:
+        instance_type: t2.micro
+        key_name: amazon-linux
+        image: ami-022082b7f1da62478
+        region: sa-east-1
+        group: default
+        count: 1
+        vpc_subnet_id: subnet-a4875bed
+        wait: yes
+        assign_public_ip: yes
+...
