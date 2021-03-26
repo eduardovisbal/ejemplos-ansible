@@ -1,0 +1,64 @@
+---
+- name: Configuracion Discos
+  hosts: centos
+  become: true
+  gather_facts: false
+  tasks:
+    - name: particionado 1
+      parted: 
+        device: /dev/sdb
+        part_start: 0%
+        part_end: 50%
+        number: 1
+        state: present
+    
+    - name: particionado 2
+      parted: 
+        device: /dev/sdb
+        part_start: 50%
+        part_end: 100%
+        number: 2
+        state: present
+        flags: [ lvm ]
+     
+    - name: VG
+      lvg: 
+        vg: vgcentos01
+        pvs: /dev/sdb2
+
+    - name: LV
+      lvol:
+        lv: lvcentos01
+        vg: vgcentos01
+        size: 100%FREE
+        shrink: false
+
+    - name: Formateo sdb1
+      filesystem:
+        fstype: xfs
+        dev: /dev/sdb1
+    - name: Formateo LV
+      filesystem:
+        fstype: xfs
+        dev: /dev/vgcentos01/lvcentos01
+    - name: Directorios de Montaje
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - /data
+        - /data01
+        - /data02
+    - name: Punto Montaje data
+      mount:
+        path: /data
+        src: /dev/sdb1
+        fstype: xfs
+        state: mounted
+    - name: Punto Montaje data01
+      mount:
+        path: /data01
+        src: /dev/vgcentos01/lvcentos01
+        fstype: xfs
+        state: mounted
+...
