@@ -1,0 +1,29 @@
+---
+- name: Configuracion Discos ASM
+  hosts: centos
+  become: true
+  gather_facts: false
+
+  vars_prompt:
+    - name: "layout_asm"
+      prompt: "Ingrese el nombre del Layout del ASM"
+      private: no
+
+  tasks:
+    - name: Creando Particion
+      parted:
+        device: "{{ item }}"
+        part_start: 0%
+        part_end: 100%
+        number: 1
+        state: present
+      with_items:
+        - /dev/sdb
+        - /dev/sdc
+
+    - name: Creando Disco ASM
+      shell:
+        cmd: "oracleasm createdisk {{ layout_asm }} /dev/sdb1"
+
+...
+  

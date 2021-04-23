@@ -1,0 +1,41 @@
+---
+- name: Configuracion Discos LVM
+  hosts: centos
+  become: true
+  gather_facts: false
+
+#  vars:
+#    vg: vgdat01
+
+  tasks:
+    - name: Creando VGDAT01
+      lvg: 
+        vg: vgdat01"
+        pvs: /dev/sdb
+
+    - name: Creando LVDAT01
+      lvol:
+        lv: lvdat01
+        vg: vgdat01
+        size: 100%FREE
+        shrink: false
+
+    - name: Creando Sistema de Archivo EXT4
+      filesystem:
+        fstype: ext4
+        dev: /dev/vgdat01/lvdat01
+    
+    - name: Creando Directorios de Montaje
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - /u01
+    
+    - name: Punto Montaje u01
+      mount:
+        path: /u01
+        src: /dev/vgdat01/lvdat01
+        fstype: ext4
+        state: mounted
+... 
