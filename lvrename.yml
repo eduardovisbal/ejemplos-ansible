@@ -1,0 +1,26 @@
+---
+- name: Renombrar LV y VG 
+  hosts: 192.168.1.147
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Desmontando el FS Prueba
+      mount:
+        path: /prueba
+        state: unmounted
+
+    - name: Renombrando el Volumen Logico - LV
+      shell: lvrename /dev/vgsre/sre lvprueba
+    
+    - name: Renombrando el Volume Group - VG
+      shell: vgrename vgsre vgprueba
+
+    - name: Montando FS Prueba
+      mount:
+        path: /prueba
+        src: /dev/mapper/vgprueba-lvprueba
+        fstype: ext4
+        state: mounted
+        dump: '1'
+    
+...  
