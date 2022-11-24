@@ -1,0 +1,69 @@
+- name:  Creacion de Cluster GKE
+  hosts: localhost
+  gather_facts: no
+  vars: 
+     gcp_project: prueba-cli-sdk
+     gcp_cred_kind: serviceaccount
+     gcp_cred_file: /home/eduardo/ansible/ansible.json
+     zone: "us-central1-c"
+     region: "us-central1"  
+     
+  tasks:
+    - name: Creacion de Disco mapeado desde la imagen de Ubuntu
+      gcp_compute_disk:
+        name: 'disco-ubuntu'
+        size_gb: 50
+        source_image: 'projects/ubuntu-os-cloud/global/images/family/ubuntu-2004-lts'
+        zone: "{{ zone }}"
+        project: "{{ gcp_project }}"
+        auth_kind: "{{ gcp_cred_kind }}"
+        service_account_file: "{{ gcp_cred_file }}"
+        state: present
+      register: disk
+
+    - name: Crea una red VPC
+      gcp_compute_network:
+        name: 'red01'
+        auto_create_subnetworks: 'true'
+        project: "{{ gcp_project }}"
+        auth_kind: "{{ gcp_cred_kind }}"
+        service_account_file: "{{ gcp_cred_file }}"
+        state: present
+      register: network 
+
+    - name: Creacion IP Publica
+      gcp_compute_address:
+         name: 'ip-publica'
+         region: "{{ region }}"
+         project: "{{ gcp_project }}"
+         auth_kind: "{{ gcp_cred_kind }}"
+         service_account_file: "{{ gcp_cred_file }}"
+         state: present
+      register: address
+
+    - name: Creando instancia 
+      gcp_compute_instance:
+         state: present
+         name: vm-ansible
+         machine_type: e2-micro
+         disks:
+           - auto_delete: true
+             boot: true
+             source: "{{ disk }}"
+         network_interfaces:
+             - network: "{{ network }}"
+               access_configs:
+                 - name: 'External NAT'
+                   nat_ip: "{{ address }}"
+                   type: 'ONE_TO_ONE_NAT'
+         zone: "{{ zone }}"
+         project: "{{ gcp_project }}"
+         auth_kind: "{{ gcp_cred_kind }}"
+         service_account_file: "{{ gcp_cred_file }}"
+         state: present
+
+    - name: Mostrar IP Publica de la Instancia
+      debug: 
+        msg: "IP Publica para acceder a la VM {{ address.address }}"
+...
+

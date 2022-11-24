@@ -1,0 +1,13 @@
+- name:  Create IP address
+  hosts: localhost
+  gather_facts: no
+  vars:
+     api_version: "3.0"
+     cluster_url: 172.16.1.100
+     prism_user: admi
+     prism_password: secret
+     cluster_name: "Your Cluster"
+     subnet_name: "VMNet"
+     image_name: "RHEL_Server_7.5"
+     vm_defs:
+       - {vm_name: my-vm-01, vm_ip: '172.16.1.111', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 1, vm_disk_list: [disk_size_mib: 152588]}  
